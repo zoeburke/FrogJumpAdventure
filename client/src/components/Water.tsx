@@ -8,8 +8,16 @@ export default function Water() {
   useFrame((state) => {
     if (!meshRef.current) return;
     
-    // Subtle wave motion
-    meshRef.current.rotation.z = Math.sin(state.clock.elapsedTime * 0.3) * 0.005;
+    // Enhanced water movement to complement lily pad sway
+    const time = state.clock.elapsedTime;
+    
+    // Multiple wave patterns for more realistic water movement
+    meshRef.current.rotation.z = Math.sin(time * 0.3) * 0.005 + 
+                                  Math.sin(time * 0.7) * 0.002;
+    meshRef.current.rotation.x = Math.cos(time * 0.4) * 0.003;
+    
+    // Subtle position offset for wave effect
+    meshRef.current.position.y = -1 + Math.sin(time * 0.5) * 0.01;
   });
   
   return (

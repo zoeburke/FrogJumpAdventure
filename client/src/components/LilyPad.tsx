@@ -13,20 +13,39 @@ export default function LilyPad({ lilyPad }: LilyPadProps) {
   useFrame((state) => {
     if (!meshRef.current) return;
     
-    // Update position
-    meshRef.current.position.copy(lilyPad.position);
+    // Base position from lily pad data
+    const baseX = lilyPad.position.x;
+    const baseZ = lilyPad.position.z;
     
-    // Add subtle floating animation
-    meshRef.current.position.y = 0.05 + Math.sin(state.clock.elapsedTime * 1.5 + lilyPad.position.x) * 0.03;
+    // Create unique phase offset for each lily pad
+    const phaseOffset = (baseX + baseZ) * 0.1;
+    const time = state.clock.elapsedTime;
     
-    // Add gentle rotation for moving pads
-    if (lilyPad.isMoving) {
-      meshRef.current.rotation.y = state.clock.elapsedTime * 0.5;
-    }
+    // Dynamic sway animation - simulate water currents
+    const swayX = Math.sin(time * 0.8 + phaseOffset) * 0.08 + 
+                  Math.sin(time * 1.3 + phaseOffset * 2) * 0.04;
+    const swayZ = Math.cos(time * 0.6 + phaseOffset) * 0.06 + 
+                  Math.cos(time * 1.1 + phaseOffset * 1.5) * 0.03;
     
-    // Add visual feedback for disappearing pads
+    // Apply sway to position
+    meshRef.current.position.x = baseX + swayX;
+    meshRef.current.position.z = baseZ + swayZ;
+    
+    // Vertical floating with more natural bobbing
+    const bobbing = Math.sin(time * 1.2 + phaseOffset) * 0.025 + 
+                    Math.sin(time * 2.1 + phaseOffset * 0.7) * 0.015;
+    meshRef.current.position.y = 0.05 + bobbing;
+    
+    // Gentle tilting to simulate floating on water
+    meshRef.current.rotation.x = Math.sin(time * 0.9 + phaseOffset) * 0.02;
+    meshRef.current.rotation.z = Math.cos(time * 0.7 + phaseOffset * 1.2) * 0.025;
+    
+    // Subtle rotation around Y axis for natural movement
+    meshRef.current.rotation.y = Math.sin(time * 0.4 + phaseOffset) * 0.03;
+    
+    // Visual feedback for disappearing pads
     if (lilyPad.isDisappearing) {
-      const pulseIntensity = Math.sin(state.clock.elapsedTime * 8) * 0.5 + 0.5;
+      const pulseIntensity = Math.sin(time * 8) * 0.5 + 0.5;
       meshRef.current.scale.setScalar(1 - pulseIntensity * 0.2);
     } else {
       meshRef.current.scale.setScalar(1);

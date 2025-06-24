@@ -139,9 +139,10 @@ export default function FrogGame() {
       // Update position
       newPosition.add(newVelocity.clone().multiplyScalar(deltaTime));
       
-      // Check collision with lily pads - only if frog is close and descending
+      // Check collision with lily pads using base positions
       let landedOnPad = false;
       for (const pad of lilyPads) {
+        // Use base position for collision since sway is just visual
         const horizontalDistance = Math.sqrt(
           Math.pow(newPosition.x - pad.position.x, 2) + 
           Math.pow(newPosition.z - pad.position.z, 2)
@@ -153,8 +154,8 @@ export default function FrogGame() {
             newPosition.y > 0.2 && 
             newVelocity.y <= 0) {
           
-          // Landed on lily pad
-          newPosition.x = pad.position.x; // Center frog on pad
+          // Landed on lily pad - use base position
+          newPosition.x = pad.position.x;
           newPosition.z = pad.position.z;
           newPosition.y = 0.8;
           newVelocity.set(0, 0, 0);
