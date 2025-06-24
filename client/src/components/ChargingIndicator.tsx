@@ -11,8 +11,11 @@ export default function ChargingIndicator() {
         <div className="text-white text-sm mb-2 text-center">Jump Power</div>
         <div className="w-40 h-3 bg-gray-700 rounded-full overflow-hidden">
           <div 
-            className="h-full bg-gradient-to-r from-green-400 via-yellow-400 to-red-500 transition-all duration-75"
-            style={{ width: `${chargeAmount * 100}%` }}
+            className="h-full bg-gradient-to-r from-green-400 via-yellow-400 to-red-500 transition-all duration-50 ease-out"
+            style={{ 
+              width: `${chargeAmount * 100}%`,
+              transition: 'width 0.05s ease-out'
+            }}
           />
         </div>
         <div className="text-white text-xs mt-1 text-center">

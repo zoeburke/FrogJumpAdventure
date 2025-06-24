@@ -75,15 +75,17 @@ export default function FrogGame() {
     };
   }, [phase, jumpKeyPressed, isJumping, chargeAmount]);
   
-  // Execute jump based on charge amount
+  // Execute jump with smooth trajectory
   const executeJump = () => {
     if (isJumping) return;
     
-    const jumpPower = 5 + (chargeAmount * 10); // Base jump + charged power
-    const jumpHeight = 3 + (chargeAmount * 5); // Base height + charged height
+    // Smooth power curve for better feel
+    const smoothChargeAmount = Math.pow(chargeAmount, 0.8);
+    const jumpPower = 5 + (smoothChargeAmount * 10); 
+    const jumpHeight = 3.5 + (smoothChargeAmount * 4.5);
     
-    // Calculate jump direction (forward in frog's facing direction)
-    const jumpDirection = new THREE.Vector3(0, 0, -1); // Forward direction
+    // Calculate jump direction with slight arc
+    const jumpDirection = new THREE.Vector3(0, 0, -1);
     jumpDirection.multiplyScalar(jumpPower);
     jumpDirection.y = jumpHeight;
     
@@ -92,7 +94,7 @@ export default function FrogGame() {
     setIsOnLilyPad(false, undefined);
     setChargeAmount(0);
     
-    playHit(); // Play jump sound
+    playHit();
     console.log("Jump executed with power:", jumpPower, "height:", jumpHeight);
   };
   
@@ -104,11 +106,13 @@ export default function FrogGame() {
     const deltaTime = lastTimeRef.current ? currentTime - lastTimeRef.current : 0;
     lastTimeRef.current = currentTime;
     
-    // Update charging
+    // Update charging with smoother progression
     if (isCharging && jumpKeyPressed) {
       const chargeDuration = (Date.now() - chargeStartTime) / 1000;
-      const newChargeAmount = Math.min(chargeDuration / 2, 1); // 2 seconds for full charge
-      setChargeAmount(newChargeAmount);
+      const rawChargeAmount = Math.min(chargeDuration / 2, 1); // 2 seconds for full charge
+      // Apply easing function for smoother feel
+      const easedChargeAmount = Math.sin(rawChargeAmount * Math.PI * 0.5);
+      setChargeAmount(easedChargeAmount);
     }
     
     // Update lily pads
@@ -129,8 +133,8 @@ export default function FrogGame() {
       const newPosition = frogPosition.clone();
       const newVelocity = frogVelocity.clone();
       
-      // Apply gravity
-      newVelocity.y -= 15 * deltaTime;
+      // Apply gravity with smoother curve
+      newVelocity.y -= 12 * deltaTime;
       
       // Update position
       newPosition.add(newVelocity.clone().multiplyScalar(deltaTime));

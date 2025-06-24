@@ -13,29 +13,43 @@ export default function Frog() {
     // Update frog position
     meshRef.current.position.copy(frogPosition);
     
-    // Add visual feedback for charging
+    // Smooth visual feedback for charging
     if (isCharging) {
       const scaleEffect = 1 + (chargeAmount * 0.15);
-      meshRef.current.scale.setScalar(scaleEffect);
+      const targetScale = scaleEffect;
+      const currentScale = meshRef.current.scale.x;
+      meshRef.current.scale.setScalar(currentScale + (targetScale - currentScale) * 0.3);
       
-      // Add glow effect
+      // Smooth glow effect
       if (meshRef.current.material instanceof THREE.MeshStandardMaterial) {
         meshRef.current.material.emissive.setHex(0x00ff00);
-        meshRef.current.material.emissiveIntensity = chargeAmount * 0.4;
+        const targetIntensity = chargeAmount * 0.4;
+        const currentIntensity = meshRef.current.material.emissiveIntensity;
+        meshRef.current.material.emissiveIntensity = currentIntensity + (targetIntensity - currentIntensity) * 0.3;
       }
     } else {
-      meshRef.current.scale.setScalar(1);
+      // Smooth return to normal
+      const currentScale = meshRef.current.scale.x;
+      meshRef.current.scale.setScalar(currentScale + (1 - currentScale) * 0.2);
+      
       if (meshRef.current.material instanceof THREE.MeshStandardMaterial) {
-        meshRef.current.material.emissive.setHex(0x000000);
-        meshRef.current.material.emissiveIntensity = 0;
+        const currentIntensity = meshRef.current.material.emissiveIntensity;
+        meshRef.current.material.emissiveIntensity = currentIntensity * 0.8;
+        if (currentIntensity < 0.01) {
+          meshRef.current.material.emissive.setHex(0x000000);
+          meshRef.current.material.emissiveIntensity = 0;
+        }
       }
     }
     
-    // Add jumping animation
+    // Add smooth jumping animation
     if (isJumping) {
-      meshRef.current.rotation.x = Math.sin(state.clock.elapsedTime * 10) * 0.2;
+      // Create a smooth arc rotation during jump
+      const jumpProgress = Math.max(0, frogPosition.y - 0.8) / 3; // Normalize jump height
+      meshRef.current.rotation.x = Math.sin(jumpProgress * Math.PI) * 0.3;
     } else {
-      meshRef.current.rotation.x = 0;
+      // Smooth return to normal position
+      meshRef.current.rotation.x *= 0.9;
     }
   });
   
