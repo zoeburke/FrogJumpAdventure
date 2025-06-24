@@ -16,24 +16,9 @@ export default function GameUI() {
   
   return (
     <>
-      {/* Game HUD */}
-      {phase === "playing" && (
-        <div className="fixed top-4 left-4 z-50">
-          <div className="bg-black bg-opacity-50 text-white p-4 rounded-lg">
-            <div className="text-2xl font-bold">Score: {score}</div>
-            <div className="text-sm">Consecutive: {consecutiveJumps}</div>
-            <div className="text-sm">Multiplier: x{multiplier.toFixed(1)}</div>
-          </div>
-        </div>
-      )}
+
       
-      {/* Audio toggle */}
-      <button
-        onClick={toggleMute}
-        className="fixed top-4 right-4 z-50 bg-black bg-opacity-50 text-white p-3 rounded-lg hover:bg-opacity-70 transition-colors"
-      >
-        {isMuted ? "🔇" : "🔊"}
-      </button>
+
       
 
       
@@ -56,15 +41,7 @@ export default function GameUI() {
         </div>
       )}
       
-      {/* Instructions */}
-      {phase === "playing" && (
-        <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 z-40">
-          <div className="bg-black bg-opacity-50 text-white px-4 py-2 rounded-lg text-sm text-center">
-            Hold <strong>J</strong> to charge jump, release to hop!<br/>
-            <span className="text-xs text-yellow-300">Follow the golden arrows to progress!</span>
-          </div>
-        </div>
-      )}
+
       
       <ChargingIndicator />
     </>
