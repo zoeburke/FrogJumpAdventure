@@ -131,13 +131,24 @@ export default function FrogGame() {
       // Update position
       newPosition.add(newVelocity.clone().multiplyScalar(deltaTime));
       
-      // Check collision with lily pads
+      // Check collision with lily pads - only if frog is close and descending
       let landedOnPad = false;
       for (const pad of lilyPads) {
-        const distance = newPosition.distanceTo(pad.position);
-        if (distance < pad.size && newPosition.y <= 0.8 && newVelocity.y <= 0) {
+        const horizontalDistance = Math.sqrt(
+          Math.pow(newPosition.x - pad.position.x, 2) + 
+          Math.pow(newPosition.z - pad.position.z, 2)
+        );
+        
+        // Only land if frog is close horizontally, at the right height, and descending
+        if (horizontalDistance < pad.size * 0.8 && 
+            newPosition.y <= 0.8 && 
+            newPosition.y > 0.3 && 
+            newVelocity.y <= 0) {
+          
           // Landed on lily pad
-          newPosition.y = 0.8; // Frog sits properly on lily pad surface
+          newPosition.x = pad.position.x; // Center frog on pad
+          newPosition.z = pad.position.z;
+          newPosition.y = 0.8;
           newVelocity.set(0, 0, 0);
           setIsJumping(false);
           setIsOnLilyPad(true, pad.id);
@@ -146,26 +157,14 @@ export default function FrogGame() {
           // Add score and increment consecutive jumps
           if (pad.id !== currentLilyPadId) {
             const basePoints = 10;
-            const distanceBonus = Math.floor(Math.abs(pad.position.z) / 4) * 2; // Bonus for distance
-            const sizeBonus = pad.size < 1 ? 5 : 0; // Bonus for smaller pads
+            const distanceBonus = Math.floor(Math.abs(pad.position.z) / 4) * 2;
+            const sizeBonus = pad.size < 1 ? 5 : 0;
             const totalPoints = basePoints + distanceBonus + sizeBonus;
             
             addScore(totalPoints);
             incrementConsecutiveJumps();
             playSuccess();
             console.log("Landed on lily pad:", pad.id, "Points:", totalPoints);
-            
-            // Trigger disappearing pad if applicable
-            if (pad.disappearTime) {
-              setTimeout(() => {
-                // Mark pad as disappearing
-                const currentPads = useFrogGame.getState().lilyPads;
-                const updatedPads = currentPads.map(p => 
-                  p.id === pad.id ? { ...p, isDisappearing: true } : p
-                );
-                useFrogGame.setState({ lilyPads: updatedPads });
-              }, pad.disappearTime);
-            }
           }
           break;
         }

@@ -35,18 +35,17 @@ export default function GameUI() {
         {isMuted ? "🔇" : "🔊"}
       </button>
       
-      {/* Start screen */}
+      {/* Start screen - minimal overlay */}
       {phase === "ready" && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white p-8 rounded-lg text-center max-w-md">
-            <h1 className="text-4xl font-bold text-green-600 mb-4">🐸 Frog Hopper</h1>
-            <p className="text-gray-700 mb-6">
-              Jump across lily pads to score points!<br/>
-              Hold <strong>J</strong> to charge your jump, release to hop!
+        <div className="fixed top-4 left-1/2 transform -translate-x-1/2 z-50">
+          <div className="bg-black bg-opacity-75 text-white p-4 rounded-lg text-center">
+            <h1 className="text-2xl font-bold text-green-400 mb-2">🐸 Frog Hopper</h1>
+            <p className="text-sm mb-3">
+              Hold <strong>J</strong> to charge, release to jump!
             </p>
             <button
               onClick={startGame}
-              className="bg-green-500 text-white px-8 py-3 rounded-lg text-xl font-semibold hover:bg-green-600 transition-colors"
+              className="bg-green-500 text-white px-6 py-2 rounded text-sm font-semibold hover:bg-green-600 transition-colors"
             >
               Start Game
             </button>
