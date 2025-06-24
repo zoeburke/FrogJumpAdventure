@@ -70,7 +70,7 @@ export const useFrogGame = create<FrogGameState>()(
     consecutiveJumps: 0,
     multiplier: 1,
     
-    frogPosition: new THREE.Vector3(0, 1, 0),
+    frogPosition: new THREE.Vector3(0, 0.8, 0),
     frogVelocity: new THREE.Vector3(0, 0, 0),
     isJumping: false,
     isCharging: false,
@@ -92,7 +92,7 @@ export const useFrogGame = create<FrogGameState>()(
             score: 0,
             consecutiveJumps: 0,
             multiplier: 1,
-            frogPosition: new THREE.Vector3(0, 1, 0),
+            frogPosition: new THREE.Vector3(0, 0.8, 0),
             frogVelocity: new THREE.Vector3(0, 0, 0),
             isJumping: false,
             isCharging: false,
@@ -129,7 +129,7 @@ export const useFrogGame = create<FrogGameState>()(
         score: 0,
         consecutiveJumps: 0,
         multiplier: 1,
-        frogPosition: new THREE.Vector3(0, 1, 0),
+        frogPosition: new THREE.Vector3(0, 0.8, 0),
         frogVelocity: new THREE.Vector3(0, 0, 0),
         isJumping: false,
         isCharging: false,
@@ -188,51 +188,23 @@ export const useFrogGame = create<FrogGameState>()(
         isDisappearing: false,
       });
       
-      // Generate sequential lily pads in a progressive path
-      let currentScore = get().score;
-      let difficulty = Math.min(Math.floor(currentScore / 50), 10); // Increase difficulty every 50 points
+      // Generate lily pads in a straight line with varying distances
+      // Frog's max jump is about 15 units (5 base + 10 max charge), so we keep distances under 12
+      const jumpDistances = [4, 6, 8, 5, 7, 9, 6, 8, 10, 7, 9, 11, 8, 10, 9, 7, 11, 8, 6, 10, 9, 8, 7, 11, 10];
+      
+      let currentZ = 0;
       
       for (let i = 0; i < 25; i++) {
-        // Create a progressive path - starts easy, gets harder
-        const baseDistance = 3 + (i * 0.3) + (difficulty * 0.2); // Gradually increase distance
-        const baseZ = -(i + 1) * baseDistance;
+        currentZ -= jumpDistances[i]; // Move forward by jump distance
         
-        // Create strategic positioning - some easy, some challenging
-        let baseX = 0;
-        if (i % 3 === 1) {
-          baseX = Math.sin(i * 0.6) * (4 + difficulty); // Sine wave pattern
-        } else if (i % 3 === 2) {
-          baseX = (Math.random() - 0.5) * (6 + difficulty); // Random positioning
-        }
-        
-        // Add manageable randomness
-        const x = baseX + (Math.random() - 0.5) * 1.5;
-        const z = baseZ + (Math.random() - 0.5) * 1;
-        
-        // Size gets smaller as difficulty increases, but not too small
-        const baseSize = Math.max(1.2 - (difficulty * 0.08), 0.7);
-        const size = baseSize + (Math.random() - 0.5) * 0.2;
-        
-        // Moving pads appear later and become more common with difficulty
-        const movingChance = Math.max(0, (i - 8) * 0.02 + difficulty * 0.03);
-        const isMoving = Math.random() < movingChance;
-        
-        // Some pads disappear after being used (advanced mechanic)
-        const disappearingChance = Math.max(0, (i - 15) * 0.01 + difficulty * 0.02);
-        const isDisappearing = Math.random() < disappearingChance;
+        const size = 1.0 + (Math.random() - 0.5) * 0.3; // Consistent size with small variation
         
         pads.push({
           id: `pad-${i}`,
-          position: new THREE.Vector3(x, 0, z),
+          position: new THREE.Vector3(0, 0, currentZ), // Straight line at x=0
           size,
-          isMoving,
-          moveDirection: isMoving ? new THREE.Vector3(
-            (Math.random() - 0.5) * (0.4 + difficulty * 0.1),
-            0,
-            (Math.random() - 0.5) * (0.2 + difficulty * 0.05)
-          ) : undefined,
-          isDisappearing: false, // Will be triggered when landed on
-          disappearTime: isDisappearing ? 3000 + Math.random() * 2000 : undefined, // 3-5 seconds
+          isMoving: false, // Remove moving pads for easier gameplay
+          isDisappearing: false,
         });
       }
       

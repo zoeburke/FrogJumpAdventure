@@ -16,8 +16,8 @@ export default function LilyPad({ lilyPad }: LilyPadProps) {
     // Update position
     meshRef.current.position.copy(lilyPad.position);
     
-    // Add floating animation
-    meshRef.current.position.y = Math.sin(state.clock.elapsedTime * 2 + lilyPad.position.x) * 0.1;
+    // Add floating animation - keep lily pads at surface level
+    meshRef.current.position.y = 0.05 + Math.sin(state.clock.elapsedTime * 2 + lilyPad.position.x) * 0.02;
     
     // Add gentle rotation for moving pads
     if (lilyPad.isMoving) {

@@ -135,9 +135,9 @@ export default function FrogGame() {
       let landedOnPad = false;
       for (const pad of lilyPads) {
         const distance = newPosition.distanceTo(pad.position);
-        if (distance < pad.size && newPosition.y <= 0.5 && newVelocity.y <= 0) {
+        if (distance < pad.size && newPosition.y <= 0.8 && newVelocity.y <= 0) {
           // Landed on lily pad
-          newPosition.y = 1;
+          newPosition.y = 0.8; // Frog sits properly on lily pad surface
           newVelocity.set(0, 0, 0);
           setIsJumping(false);
           setIsOnLilyPad(true, pad.id);
