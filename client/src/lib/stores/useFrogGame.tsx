@@ -188,15 +188,38 @@ export const useFrogGame = create<FrogGameState>()(
         isDisappearing: false,
       });
       
-      // Generate random lily pads
-      for (let i = 0; i < 15; i++) {
-        const angle = (Math.random() * Math.PI * 2);
-        const distance = 3 + Math.random() * 8;
-        const x = Math.cos(angle) * distance;
-        const z = Math.sin(angle) * distance;
+      // Generate sequential lily pads in a progressive path
+      let currentScore = get().score;
+      let difficulty = Math.min(Math.floor(currentScore / 50), 10); // Increase difficulty every 50 points
+      
+      for (let i = 0; i < 25; i++) {
+        // Create a progressive path - starts easy, gets harder
+        const baseDistance = 3 + (i * 0.3) + (difficulty * 0.2); // Gradually increase distance
+        const baseZ = -(i + 1) * baseDistance;
         
-        const size = 0.8 + Math.random() * 0.6;
-        const isMoving = Math.random() < 0.3; // 30% chance of moving
+        // Create strategic positioning - some easy, some challenging
+        let baseX = 0;
+        if (i % 3 === 1) {
+          baseX = Math.sin(i * 0.6) * (4 + difficulty); // Sine wave pattern
+        } else if (i % 3 === 2) {
+          baseX = (Math.random() - 0.5) * (6 + difficulty); // Random positioning
+        }
+        
+        // Add manageable randomness
+        const x = baseX + (Math.random() - 0.5) * 1.5;
+        const z = baseZ + (Math.random() - 0.5) * 1;
+        
+        // Size gets smaller as difficulty increases, but not too small
+        const baseSize = Math.max(1.2 - (difficulty * 0.08), 0.7);
+        const size = baseSize + (Math.random() - 0.5) * 0.2;
+        
+        // Moving pads appear later and become more common with difficulty
+        const movingChance = Math.max(0, (i - 8) * 0.02 + difficulty * 0.03);
+        const isMoving = Math.random() < movingChance;
+        
+        // Some pads disappear after being used (advanced mechanic)
+        const disappearingChance = Math.max(0, (i - 15) * 0.01 + difficulty * 0.02);
+        const isDisappearing = Math.random() < disappearingChance;
         
         pads.push({
           id: `pad-${i}`,
@@ -204,11 +227,12 @@ export const useFrogGame = create<FrogGameState>()(
           size,
           isMoving,
           moveDirection: isMoving ? new THREE.Vector3(
-            (Math.random() - 0.5) * 0.5,
+            (Math.random() - 0.5) * (0.4 + difficulty * 0.1),
             0,
-            (Math.random() - 0.5) * 0.5
+            (Math.random() - 0.5) * (0.2 + difficulty * 0.05)
           ) : undefined,
-          isDisappearing: false,
+          isDisappearing: false, // Will be triggered when landed on
+          disappearTime: isDisappearing ? 3000 + Math.random() * 2000 : undefined, // 3-5 seconds
         });
       }
       

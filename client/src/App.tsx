@@ -10,7 +10,7 @@ import { useAudio } from "./lib/stores/useAudio";
 const queryClient = new QueryClient();
 
 function App() {
-  const { gamePhase } = useFrogGame();
+  const { phase } = useFrogGame();
   
   return (
     <QueryClientProvider client={queryClient}>

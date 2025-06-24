@@ -1,9 +1,10 @@
-import { useFrame } from "@react-three/fiber";
+import { useFrame, useThree } from "@react-three/fiber";
 import { useEffect, useRef } from "react";
 import * as THREE from "three";
 import Frog from "./Frog";
 import LilyPad from "./LilyPad";
 import Water from "./Water";
+import Environment from "./Environment";
 import { useFrogGame } from "../lib/stores/useFrogGame";
 import { useAudio } from "../lib/stores/useAudio";
 
@@ -37,6 +38,9 @@ export default function FrogGame() {
   
   const { playHit, playSuccess } = useAudio();
   const lastTimeRef = useRef(0);
+  const { camera } = useThree();
+  const cameraTargetRef = useRef(new THREE.Vector3());
+  const cameraOffsetRef = useRef(new THREE.Vector3(0, 8, 12));
   
   // Handle keyboard input
   useEffect(() => {
@@ -109,6 +113,13 @@ export default function FrogGame() {
     // Update lily pads
     updateLilyPads(deltaTime);
     
+    // Update camera to follow frog
+    const targetPosition = frogPosition.clone();
+    targetPosition.add(cameraOffsetRef.current);
+    cameraTargetRef.current.lerp(targetPosition, deltaTime * 2);
+    camera.position.copy(cameraTargetRef.current);
+    camera.lookAt(frogPosition.x, frogPosition.y, frogPosition.z);
+    
     // Physics update for jumping frog
     if (isJumping) {
       const newPosition = frogPosition.clone();
@@ -134,10 +145,27 @@ export default function FrogGame() {
           
           // Add score and increment consecutive jumps
           if (pad.id !== currentLilyPadId) {
-            addScore(10);
+            const basePoints = 10;
+            const distanceBonus = Math.floor(Math.abs(pad.position.z) / 4) * 2; // Bonus for distance
+            const sizeBonus = pad.size < 1 ? 5 : 0; // Bonus for smaller pads
+            const totalPoints = basePoints + distanceBonus + sizeBonus;
+            
+            addScore(totalPoints);
             incrementConsecutiveJumps();
             playSuccess();
-            console.log("Landed on lily pad:", pad.id);
+            console.log("Landed on lily pad:", pad.id, "Points:", totalPoints);
+            
+            // Trigger disappearing pad if applicable
+            if (pad.disappearTime) {
+              setTimeout(() => {
+                // Mark pad as disappearing
+                const currentPads = useFrogGame.getState().lilyPads;
+                const updatedPads = currentPads.map(p => 
+                  p.id === pad.id ? { ...p, isDisappearing: true } : p
+                );
+                useFrogGame.setState({ lilyPads: updatedPads });
+              }, pad.disappearTime);
+            }
           }
           break;
         }
@@ -166,6 +194,7 @@ export default function FrogGame() {
       ))}
       
       <Water />
+      <Environment />
     </group>
   );
 }

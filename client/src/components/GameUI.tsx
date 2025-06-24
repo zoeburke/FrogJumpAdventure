@@ -76,8 +76,9 @@ export default function GameUI() {
       {/* Instructions */}
       {phase === "playing" && (
         <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 z-40">
-          <div className="bg-black bg-opacity-50 text-white px-4 py-2 rounded-lg text-sm">
-            Hold <strong>J</strong> to charge jump, release to hop!
+          <div className="bg-black bg-opacity-50 text-white px-4 py-2 rounded-lg text-sm text-center">
+            Hold <strong>J</strong> to charge jump, release to hop!<br/>
+            <span className="text-xs text-yellow-300">Follow the golden arrows to progress!</span>
           </div>
         </div>
       )}

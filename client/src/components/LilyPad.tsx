@@ -23,6 +23,14 @@ export default function LilyPad({ lilyPad }: LilyPadProps) {
     if (lilyPad.isMoving) {
       meshRef.current.rotation.y = state.clock.elapsedTime * 0.5;
     }
+    
+    // Add visual feedback for disappearing pads
+    if (lilyPad.isDisappearing) {
+      const pulseIntensity = Math.sin(state.clock.elapsedTime * 8) * 0.5 + 0.5;
+      meshRef.current.scale.setScalar(1 - pulseIntensity * 0.2);
+    } else {
+      meshRef.current.scale.setScalar(1);
+    }
   });
   
   return (
