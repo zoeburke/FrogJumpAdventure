@@ -22,9 +22,9 @@ export default function Water() {
     <mesh ref={meshRef} position={[0, -1, 0]} receiveShadow>
       <planeGeometry args={[50, 50]} />
       <meshStandardMaterial 
-        color="#4169E1" 
+        color="#87CEEB" 
         transparent 
-        opacity={0.7}
+        opacity={0.2}
         side={THREE.DoubleSide}
       />
     </mesh>
