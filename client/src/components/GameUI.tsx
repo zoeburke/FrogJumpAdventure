@@ -52,14 +52,49 @@ export default function GameUI() {
       {/* Game over screen */}
       {phase === "gameOver" && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white p-8 rounded-lg text-center max-w-md">
-            <h2 className="text-3xl font-bold text-red-600 mb-4">Game Over!</h2>
-            <p className="text-gray-700 mb-2">Final Score: <strong>{score}</strong></p>
-            <p className="text-gray-700 mb-2">Best Streak: <strong>{consecutiveJumps}</strong></p>
-            <p className="text-gray-700 mb-6">Max Multiplier: <strong>{multiplier}x</strong></p>
+          <div className="bg-white p-8 rounded-lg text-center max-w-md shadow-2xl">
+            <h2 className="text-4xl font-bold text-red-600 mb-6">Game Over!</h2>
+            
+            {/* Score Section */}
+            <div className="bg-gray-100 rounded-lg p-4 mb-6">
+              <div className="text-3xl font-bold text-gray-800 mb-2">{score}</div>
+              <div className="text-sm text-gray-600">Final Score</div>
+            </div>
+            
+            {/* Performance Stats */}
+            <div className="grid grid-cols-2 gap-4 mb-6">
+              <div className="bg-blue-50 rounded-lg p-3">
+                <div className="text-xl font-bold text-blue-600">{consecutiveJumps}</div>
+                <div className="text-xs text-blue-500">Best Streak</div>
+              </div>
+              <div className="bg-yellow-50 rounded-lg p-3">
+                <div className="text-xl font-bold text-yellow-600">{multiplier}x</div>
+                <div className="text-xs text-yellow-500">Max Multiplier</div>
+              </div>
+            </div>
+            
+            {/* Performance Message */}
+            <div className="mb-6">
+              {consecutiveJumps >= 15 && (
+                <p className="text-green-600 font-semibold">🏆 Incredible! You reached the maximum multiplier!</p>
+              )}
+              {consecutiveJumps >= 10 && consecutiveJumps < 15 && (
+                <p className="text-blue-600 font-semibold">🎯 Excellent streak! You're getting close to max multiplier!</p>
+              )}
+              {consecutiveJumps >= 6 && consecutiveJumps < 10 && (
+                <p className="text-purple-600 font-semibold">🔥 Great job! You unlocked the 3x multiplier!</p>
+              )}
+              {consecutiveJumps >= 3 && consecutiveJumps < 6 && (
+                <p className="text-orange-600 font-semibold">⭐ Nice work! You reached the 2x multiplier!</p>
+              )}
+              {consecutiveJumps < 3 && (
+                <p className="text-gray-600">Keep practicing to unlock multipliers!</p>
+              )}
+            </div>
+            
             <button
               onClick={restartGame}
-              className="bg-green-500 text-white px-8 py-3 rounded-lg text-xl font-semibold hover:bg-green-600 transition-colors w-full"
+              className="bg-green-500 text-white px-8 py-3 rounded-lg text-xl font-semibold hover:bg-green-600 transition-colors w-full shadow-lg"
             >
               Play Again
             </button>

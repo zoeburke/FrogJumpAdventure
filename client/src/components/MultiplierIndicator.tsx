@@ -17,7 +17,6 @@ export default function MultiplierIndicator() {
     if (consecutiveJumps < 6) return 2;
     if (consecutiveJumps < 10) return 3;
     if (consecutiveJumps < 15) return 4;
-    if (consecutiveJumps < 15) return 5;
     return 5; // Max
   };
   
@@ -27,14 +26,14 @@ export default function MultiplierIndicator() {
   
   return (
     <div className="fixed top-4 right-1/2 transform translate-x-1/2 z-50">
-      <div className="bg-gradient-to-r from-yellow-500 to-orange-500 bg-opacity-90 text-white p-3 rounded-lg text-center min-w-[200px]">
+      <div className="bg-gradient-to-r from-yellow-500 to-orange-500 text-white p-3 rounded-lg text-center min-w-[200px] shadow-lg border-2 border-yellow-400">
         <div className="text-lg font-bold text-yellow-100">
           {multiplier}x MULTIPLIER
         </div>
         {!isMaxed && (
           <>
             <div className="text-xs mt-1">
-              Next: {nextMultiplier}x
+              Next: {nextMultiplier}x at {nextMultiplier === 2 ? 3 : nextMultiplier === 3 ? 6 : nextMultiplier === 4 ? 10 : 15} jumps
             </div>
             <div className="w-full h-2 bg-black bg-opacity-30 rounded-full mt-2 overflow-hidden">
               <div 
@@ -45,8 +44,8 @@ export default function MultiplierIndicator() {
           </>
         )}
         {isMaxed && (
-          <div className="text-xs mt-1 text-yellow-100">
-            MAX MULTIPLIER!
+          <div className="text-xs mt-1 text-yellow-100 font-bold">
+            🏆 MAX MULTIPLIER!
           </div>
         )}
       </div>
