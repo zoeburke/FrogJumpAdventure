@@ -1,0 +1,51 @@
+**Objective**
+
+Design and develop a platformer game where the player controls a frog attempting to jump across lily pads with precision and skill. The goal is to achieve the highest possible score by successfully landing on consecutive lily pads without falling into the water.
+
+---
+
+**Core Gameplay Mechanics**
+- **Control System:**
+  - **Jump Input:**
+    - Press and hold the `'J'` key to "charge" the frog's jump.
+    - The amount of "charge" determines the jump's distance and height. Utilize the key actuation point (the amount of depression of the key) for precise control over the jump power.
+    - Release the `'J'` key to make the frog jump across the lily pads.
+  - Visual feedback system (e.g., a charging bar or glowing frog sprite) to indicate jump power based on the hold duration.
+- **Score System:**
+  - **Points:** Award points based on successful jumps to lily pads.
+  - Consecutive successful jumps increase the score multiplier (bonus for streaks).
+- **Input Precision:**
+  - Ensure the timing and pressure of key presses are essential for calculating accurate jump trajectories.
+
+---
+
+**Game Environment**
+- **Platforms:**
+  - Lily pads act as movable or stationary platforms.
+  - Randomize placement and movement of lily pads for varying difficulty:
+    - Smaller lily pads for advanced levels.
+    - Moving lily pads and disappearing ones as a timed challenge.
+- **Water Mechanics:**
+  - Falling into the water ends the current game session.
+  - Add dynamic ripples and environmental animations to enhance immersion.
+- **Background:**
+  - Use a nature-inspired aesthetic with vibrant visuals (pond, reeds, insects flying, etc.).
+
+---
+
+**Additional Mechanics**
+- **Obstacles and Challenges:**
+  - Introduce occasional threats (e.g., fish snapping at lily pads, floating debris that blocks movement).
+  - Add in bonus lily pads or collectibles like flies that increase score or grant temporary perks (e.g., higher jump power or slower lily pad movement).
+- **Progress System:**
+  - Gradually increase difficulty as the score rises to encourage skill growth.
+  - Introduce new levels or areas at milestone scores (e.g., transition from a pond to a river setting).
+
+---
+
+**Audio-Visual Enhancements**
+- **Sound Effects:**
+  - Provide satisfying sound cues when charging jump, landing on lily pads, or falling in water.
+  - Integrate ambient nature sounds (e.g., frogs croaking, water splashes, bird chirps).
+- **Character Design:**
+  - Create a playful frog character with animations for jumping, charging, landing, and falling.
