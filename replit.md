@@ -121,6 +121,7 @@ Frog Hopper is a 3D platformer game built with React Three Fiber, where players 
 - June 24, 2025: Added progressive difficulty and improved camera following
 - June 24, 2025: Enhanced animations with smooth jump arcs and responsive charging
 - June 24, 2025: Implemented dynamic lily pad sway animation with natural water movement
+- June 24, 2025: Added progressive score multipliers for consecutive jumps with visual indicators
 
 ## User Preferences
 

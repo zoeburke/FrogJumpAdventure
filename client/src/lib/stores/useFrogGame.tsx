@@ -185,14 +185,20 @@ export const useFrogGame = create<FrogGameState>()(
     // Game actions
     addScore: (points) => {
       set((state) => ({
-        score: state.score + points // Simple addition, no multiplier
+        score: state.score + (points * state.multiplier)
       }));
     },
     
     incrementConsecutiveJumps: () => {
       set((state) => {
         const newConsecutive = state.consecutiveJumps + 1;
-        const newMultiplier = Math.min(1 + Math.floor(newConsecutive / 3) * 0.5, 3);
+        // Progressive multiplier: 1x -> 2x -> 3x -> 4x -> 5x (max)
+        let newMultiplier = 1;
+        if (newConsecutive >= 3) newMultiplier = 2;
+        if (newConsecutive >= 6) newMultiplier = 3;
+        if (newConsecutive >= 10) newMultiplier = 4;
+        if (newConsecutive >= 15) newMultiplier = 5;
+        
         return {
           consecutiveJumps: newConsecutive,
           multiplier: newMultiplier

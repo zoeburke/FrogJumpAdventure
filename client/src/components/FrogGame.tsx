@@ -165,10 +165,13 @@ export default function FrogGame() {
           
           // Add score and increment consecutive jumps
           if (pad.id !== currentLilyPadId) {
-            addScore(1); // Each successful jump = 1 point
-            incrementConsecutiveJumps();
+            const basePoints = 1;
+            incrementConsecutiveJumps(); // This updates the multiplier
+            const currentMultiplier = useFrogGame.getState().multiplier;
+            const earnedPoints = basePoints * currentMultiplier;
+            addScore(basePoints); // addScore applies the multiplier internally
             playSuccess();
-            console.log("Landed on lily pad:", pad.id, "Points: 1");
+            console.log(`Landed on lily pad: ${pad.id}, Points: ${basePoints} x ${currentMultiplier} = ${earnedPoints}`);
           }
           break;
         }

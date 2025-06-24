@@ -1,6 +1,7 @@
 import { useFrogGame } from "../lib/stores/useFrogGame";
 import { useAudio } from "../lib/stores/useAudio";
 import ChargingIndicator from "./ChargingIndicator";
+import MultiplierIndicator from "./MultiplierIndicator";
 
 export default function GameUI() {
   const { 
@@ -21,6 +22,12 @@ export default function GameUI() {
         <div className="fixed top-4 left-4 z-50">
           <div className="bg-black bg-opacity-75 text-white p-3 rounded-lg">
             <div className="text-xl font-bold">Score: {score}</div>
+            <div className="text-sm">Streak: {consecutiveJumps}</div>
+            {multiplier > 1 && (
+              <div className="text-sm text-yellow-300 font-bold">
+                {multiplier}x Multiplier!
+              </div>
+            )}
           </div>
         </div>
       )}
@@ -48,7 +55,8 @@ export default function GameUI() {
           <div className="bg-white p-8 rounded-lg text-center max-w-md">
             <h2 className="text-3xl font-bold text-red-600 mb-4">Game Over!</h2>
             <p className="text-gray-700 mb-2">Final Score: <strong>{score}</strong></p>
-            <p className="text-gray-700 mb-6">Lily Pads Reached: <strong>{score}</strong></p>
+            <p className="text-gray-700 mb-2">Best Streak: <strong>{consecutiveJumps}</strong></p>
+            <p className="text-gray-700 mb-6">Max Multiplier: <strong>{multiplier}x</strong></p>
             <button
               onClick={restartGame}
               className="bg-green-500 text-white px-8 py-3 rounded-lg text-xl font-semibold hover:bg-green-600 transition-colors w-full"
@@ -60,6 +68,7 @@ export default function GameUI() {
       )}
       
       <ChargingIndicator />
+      <MultiplierIndicator />
     </>
   );
 }
