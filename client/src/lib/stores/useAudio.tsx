@@ -71,5 +71,22 @@ export const useAudio = create<AudioState>((set, get) => ({
         console.log("Success sound play prevented:", error);
       });
     }
+  },
+  
+  playCharge: () => {
+    const { hitSound, isMuted } = get();
+    if (hitSound) {
+      if (isMuted) {
+        console.log("Charge sound skipped (muted)");
+        return;
+      }
+      
+      const soundClone = hitSound.cloneNode() as HTMLAudioElement;
+      soundClone.volume = 0.2;
+      soundClone.playbackRate = 1.5;
+      soundClone.play().catch(error => {
+        console.log("Charge sound play prevented:", error);
+      });
+    }
   }
 }));
