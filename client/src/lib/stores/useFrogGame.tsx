@@ -63,55 +63,78 @@ interface FrogGameState {
 }
 
 export const useFrogGame = create<FrogGameState>()(
-  subscribeWithSelector((set, get) => ({
-    // Initial state
-    phase: "ready",
-    score: 0,
-    consecutiveJumps: 0,
-    multiplier: 1,
+  subscribeWithSelector((set, get) => {
+    // Initialize lily pads immediately
+    const initialLilyPads: LilyPadData[] = [];
     
-    frogPosition: new THREE.Vector3(0, 0.8, 0),
-    frogVelocity: new THREE.Vector3(0, 0, 0),
-    isJumping: false,
-    isCharging: false,
-    chargeAmount: 0,
-    isOnLilyPad: true,
-    currentLilyPadId: "start",
+    // Starting lily pad
+    initialLilyPads.push({
+      id: "start",
+      position: new THREE.Vector3(0, 0, 0),
+      size: 1.5,
+      isMoving: false,
+      isDisappearing: false,
+    });
     
-    lilyPads: [],
+    // Generate lily pads in a straight line with varying distances
+    const jumpDistances = [4, 6, 8, 5, 7, 9, 6, 8, 10, 7, 9, 11, 8, 10, 9, 7, 11, 8, 6, 10, 9, 8, 7, 11, 10];
+    let currentZ = 0;
     
-    jumpKeyPressed: false,
-    chargeStartTime: 0,
+    for (let i = 0; i < 25; i++) {
+      currentZ -= jumpDistances[i];
+      const size = 1.0 + (Math.random() - 0.5) * 0.3;
+      
+      initialLilyPads.push({
+        id: `pad-${i}`,
+        position: new THREE.Vector3(0, 0, currentZ),
+        size,
+        isMoving: false,
+        isDisappearing: false,
+      });
+    }
+
+    return {
+      // Initial state
+      phase: "playing",
+      score: 0,
+      consecutiveJumps: 0,
+      multiplier: 1,
+      
+      frogPosition: new THREE.Vector3(0, 0.8, 0),
+      frogVelocity: new THREE.Vector3(0, 0, 0),
+      isJumping: false,
+      isCharging: false,
+      chargeAmount: 0,
+      isOnLilyPad: true,
+      currentLilyPadId: "start",
+      
+      lilyPads: initialLilyPads,
+      
+      jumpKeyPressed: false,
+      chargeStartTime: 0,
     
     // Actions
     startGame: () => {
-      set((state) => {
-        if (state.phase === "ready") {
-          const newState = {
-            phase: "playing" as GamePhase,
-            score: 0,
-            consecutiveJumps: 0,
-            multiplier: 1,
-            frogPosition: new THREE.Vector3(0, 0.8, 0),
-            frogVelocity: new THREE.Vector3(0, 0, 0),
-            isJumping: false,
-            isCharging: false,
-            chargeAmount: 0,
-            isOnLilyPad: true,
-            currentLilyPadId: "start",
-            jumpKeyPressed: false,
-            chargeStartTime: 0,
-          };
-          
-          // Generate initial lily pads
-          setTimeout(() => {
-            get().generateLilyPads();
-          }, 0);
-          
-          return newState;
-        }
-        return {};
-      });
+      set(() => ({
+        phase: "playing" as GamePhase,
+        score: 0,
+        consecutiveJumps: 0,
+        multiplier: 1,
+        frogPosition: new THREE.Vector3(0, 0.8, 0),
+        frogVelocity: new THREE.Vector3(0, 0, 0),
+        isJumping: false,
+        isCharging: false,
+        chargeAmount: 0,
+        isOnLilyPad: true,
+        currentLilyPadId: "start",
+        jumpKeyPressed: false,
+        chargeStartTime: 0,
+      }));
+      
+      // Generate initial lily pads
+      setTimeout(() => {
+        get().generateLilyPads();
+      }, 0);
     },
     
     endGame: () => {
@@ -125,7 +148,7 @@ export const useFrogGame = create<FrogGameState>()(
     
     restartGame: () => {
       set(() => ({
-        phase: "ready",
+        phase: "playing",
         score: 0,
         consecutiveJumps: 0,
         multiplier: 1,
@@ -140,6 +163,11 @@ export const useFrogGame = create<FrogGameState>()(
         jumpKeyPressed: false,
         chargeStartTime: 0,
       }));
+      
+      // Generate lily pads immediately for restart
+      setTimeout(() => {
+        get().generateLilyPads();
+      }, 0);
     },
     
     // Frog actions
@@ -232,5 +260,6 @@ export const useFrogGame = create<FrogGameState>()(
         return { lilyPads: updatedPads };
       });
     },
-  }))
+  };
+  })
 );
