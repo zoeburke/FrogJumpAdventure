@@ -185,7 +185,7 @@ export const useFrogGame = create<FrogGameState>()(
     // Game actions
     addScore: (points) => {
       set((state) => ({
-        score: state.score + (points * state.multiplier)
+        score: state.score + points // Simple addition, no multiplier
       }));
     },
     

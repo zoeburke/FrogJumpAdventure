@@ -156,15 +156,10 @@ export default function FrogGame() {
           
           // Add score and increment consecutive jumps
           if (pad.id !== currentLilyPadId) {
-            const basePoints = 10;
-            const distanceBonus = Math.floor(Math.abs(pad.position.z) / 4) * 2;
-            const sizeBonus = pad.size < 1 ? 5 : 0;
-            const totalPoints = basePoints + distanceBonus + sizeBonus;
-            
-            addScore(totalPoints);
+            addScore(1); // Each successful jump = 1 point
             incrementConsecutiveJumps();
             playSuccess();
-            console.log("Landed on lily pad:", pad.id, "Points:", totalPoints);
+            console.log("Landed on lily pad:", pad.id, "Points: 1");
           }
           break;
         }
