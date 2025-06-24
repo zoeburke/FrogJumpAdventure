@@ -36,7 +36,7 @@ export default function FrogGame() {
     updateLilyPads,
   } = useFrogGame();
   
-  const { playHit, playSuccess } = useAudio();
+  const { playHit, playSuccess, playCharge } = useAudio();
   const lastTimeRef = useRef(0);
   const { camera } = useThree();
   const cameraTargetRef = useRef(new THREE.Vector3());
@@ -50,6 +50,7 @@ export default function FrogGame() {
         setJumpKeyPressed(true);
         setIsCharging(true);
         setChargeStartTime(Date.now());
+        playCharge();
       }
     };
     
@@ -113,12 +114,15 @@ export default function FrogGame() {
     // Update lily pads
     updateLilyPads(deltaTime);
     
-    // Update camera to follow frog
+    // Smooth camera following
     const targetPosition = frogPosition.clone();
     targetPosition.add(cameraOffsetRef.current);
-    cameraTargetRef.current.lerp(targetPosition, deltaTime * 2);
+    cameraTargetRef.current.lerp(targetPosition, deltaTime * 3);
     camera.position.copy(cameraTargetRef.current);
-    camera.lookAt(frogPosition.x, frogPosition.y, frogPosition.z);
+    
+    // Look slightly ahead of the frog
+    const lookTarget = new THREE.Vector3(frogPosition.x, frogPosition.y, frogPosition.z - 2);
+    camera.lookAt(lookTarget);
     
     // Physics update for jumping frog
     if (isJumping) {
@@ -140,9 +144,9 @@ export default function FrogGame() {
         );
         
         // Only land if frog is close horizontally, at the right height, and descending
-        if (horizontalDistance < pad.size * 0.8 && 
-            newPosition.y <= 0.8 && 
-            newPosition.y > 0.3 && 
+        if (horizontalDistance < pad.size * 0.9 && 
+            newPosition.y <= 0.9 && 
+            newPosition.y > 0.2 && 
             newVelocity.y <= 0) {
           
           // Landed on lily pad
@@ -166,7 +170,7 @@ export default function FrogGame() {
       }
       
       // Check if fell in water
-      if (!landedOnPad && newPosition.y < -0.5) {
+      if (!landedOnPad && newPosition.y < -1.0) {
         console.log("Fell in water - game over");
         endGame();
         resetConsecutiveJumps();

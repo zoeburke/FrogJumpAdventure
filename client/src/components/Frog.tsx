@@ -13,15 +13,15 @@ export default function Frog() {
     // Update frog position
     meshRef.current.position.copy(frogPosition);
     
-    // Add some visual feedback for charging
+    // Add visual feedback for charging
     if (isCharging) {
-      const glowIntensity = 0.5 + (chargeAmount * 0.5);
-      meshRef.current.scale.setScalar(1 + (chargeAmount * 0.2));
+      const scaleEffect = 1 + (chargeAmount * 0.15);
+      meshRef.current.scale.setScalar(scaleEffect);
       
-      // Add slight glow effect by adjusting material emissive
+      // Add glow effect
       if (meshRef.current.material instanceof THREE.MeshStandardMaterial) {
         meshRef.current.material.emissive.setHex(0x00ff00);
-        meshRef.current.material.emissiveIntensity = chargeAmount * 0.3;
+        meshRef.current.material.emissiveIntensity = chargeAmount * 0.4;
       }
     } else {
       meshRef.current.scale.setScalar(1);

@@ -76,8 +76,8 @@ export const useFrogGame = create<FrogGameState>()(
       isDisappearing: false,
     });
     
-    // Generate lily pads in a straight line with varying distances
-    const jumpDistances = [4, 6, 8, 5, 7, 9, 6, 8, 10, 7, 9, 11, 8, 10, 9, 7, 11, 8, 6, 10, 9, 8, 7, 11, 10];
+    // Progressive difficulty with achievable distances
+    const jumpDistances = [3, 4, 5, 4, 6, 7, 5, 7, 8, 6, 8, 9, 7, 9, 10, 8, 10, 11, 9, 11, 10, 9, 11, 12, 11];
     let currentZ = 0;
     
     for (let i = 0; i < 25; i++) {

@@ -8,14 +8,8 @@ export default function Water() {
   useFrame((state) => {
     if (!meshRef.current) return;
     
-    // Create water ripple effect
-    if (meshRef.current.material instanceof THREE.MeshStandardMaterial) {
-      const time = state.clock.elapsedTime;
-      meshRef.current.material.opacity = 0.7 + Math.sin(time * 2) * 0.1;
-    }
-    
-    // Gentle wave motion
-    meshRef.current.rotation.z = Math.sin(state.clock.elapsedTime * 0.5) * 0.01;
+    // Subtle wave motion
+    meshRef.current.rotation.z = Math.sin(state.clock.elapsedTime * 0.3) * 0.005;
   });
   
   return (

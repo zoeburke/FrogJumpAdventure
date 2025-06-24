@@ -15,6 +15,7 @@ interface AudioState {
   toggleMute: () => void;
   playHit: () => void;
   playSuccess: () => void;
+  playCharge: () => void;
 }
 
 export const useAudio = create<AudioState>((set, get) => ({
