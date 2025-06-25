@@ -2,6 +2,7 @@ import { useFrogGame } from "../lib/stores/useFrogGame";
 import { useAudio } from "../lib/stores/useAudio";
 import ChargingIndicator from "./ChargingIndicator";
 import MultiplierIndicator from "./MultiplierIndicator";
+import ActuationGuide from "./ActuationGuide";
 
 export default function GameUI() {
   const { 
